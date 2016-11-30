@@ -7,11 +7,17 @@
             'access callback' => TRUE,
             'type' => MENU_NORMAL_ITEM,
         );
+        $items['clock_angle_results_page'] = array(
+            'title' => 'Clock Angle Results',
+            'page callback' => 'get_clock_angle',
+            'access callback' => TRUE,
+            'type' => MENU_CALLBACK,
+        );
         return $items;
     }
     function clock_angle_form(){
         $form['hours'] = array(
-            '#title' => 'Hour Hand',
+            '#title' => 'Housr Hand',
             '#type' => 'textfield',
             '#description' => t('Enter value representing the hour hand'),
         );
@@ -25,4 +31,22 @@
             '#value' => 'Check Clock Angle',
         );
         return $form;
+    }
+    function clock_angle_form_submit($form, &$form_state){
+        $_SESSION['minutes'] = $form_state['values']['minutes'];
+        $_SESSION['hours'] = $form_state['values']['hours'];
+        $form_state['redirect'] = "clock_angle_results_page";
+    }
+
+    function get_clock_angle(){
+        $minutes_degrees = $_SESSION['minutes'] *6;
+        $hours_degrees = (($_SESSION['hours'] * 30)-360 + ($_SESSION['minutes'] * .5));
+        $results = abs($hours_degrees - $minutes_degrees);
+        if($results === 360){
+            $results = 0;
+        }
+        elseif($results >180){
+            $results = abs($results - 360);
+        }
+        return '<p> ' . $results . '</p>';
     }
