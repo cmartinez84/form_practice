@@ -1,0 +1,57 @@
+<?php
+function ping_pong_menu(){
+  $items['ping_pong'] = array(
+    'title' => 'Play Ping Pong!',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ping_pong_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    );
+    $items['ping_pong_results'] = array(
+      'title' => 'Here are your ping-pong results',
+      'page callback' => 'results',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function ping_pong_form(){
+  $form['first_number'] = array(
+    '#title' => 'First Number',
+    '#type' => 'textfield',
+    '#description' => t('Enter the first number'),
+  );
+  $form['submit'] =array(
+    '#type' => 'submit',
+    '#value' => 'Play Ping Pong!!!'
+  );
+  return $form;
+}
+
+function ping_pong_form_submit($form, &$form_state){
+  $_SESSION['first_number'] = $form_state['values']['first_number'];
+  $form_state['redirect'] = 'ping_pong_results';
+}
+
+function results(){
+  $start = $_SESSION['first_number'];
+  $output = "<ul>";
+  while($start > 0){
+    if($start % 15 === 0){
+      $output .= "<li>ping-pong</li> ";
+    }
+    elseif($start % 5 === 0){
+      $output .= "<li>ping</li> ";
+    }
+    elseif($start %3 === 0){
+      $output .= "<li>pong</li> ";
+    }
+    else{
+      $output .= "<li>" . $start ." </li>";
+    }
+      $start -= 1;
+  }
+  $output .= "</ul>";
+  return $output;
+}

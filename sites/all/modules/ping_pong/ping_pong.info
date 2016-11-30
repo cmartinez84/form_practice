@@ -1,0 +1,5 @@
+name = Ping Pong
+description = A module to play the infamous ping-pong coding challenge
+package = My Custom Modules
+core = 7.x
+files[] = ping-pong.module

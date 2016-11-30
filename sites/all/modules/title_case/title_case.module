@@ -1,0 +1,50 @@
+<?php
+  function title_case_menu(){
+    $items['title_case'] = array(
+      'title' => 'Title Case',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('title_case_form'),
+      'access callback' => TRUE,
+      'type' => MENU_NORMAL_ITEM,
+    );
+    $items['title_case_results_page'] = array(
+      'title' => 'Here is your string printed in title case',
+      'page callback' => 'title_case_results',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    );
+    return $items;
+  }
+
+  function title_case_form(){
+    $form['user_input'] = array(
+      "#title" => 'Entry',
+      '#type' => 'textfield',
+      '#description' => t('Enter a string to convert into title case'),
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => 'Get Title Case',
+    );
+    return $form;
+  }
+  function title_case_form_submit($form, &$form_state){
+    $_SESSION['user_string'] = $form_state['values']['user_input'];
+    $form_state['redirect'] = 'title_case_results_page';
+  }
+
+  function title_case_results(){
+    $exceptions = array("and", "if", "or", "the", "in", "to", "a", "an");
+    $user_string_array = explode(" ", $_SESSION['user_string']);
+    $last_index = sizeof($user_string_array) -1;
+
+    foreach ($user_string_array as $key => $word) {
+      if(!in_array($word, $exceptions)){
+        $user_string_array[$key] = ucfirst($word);
+      }
+    }
+    $user_string_array[0] = ucfirst($user_string_array[0]);
+    $user_string_array[$last_index] =ucfirst($user_string_array[$last_index]);
+    $output = join(" ", $user_string_array);
+    return $output;
+  }

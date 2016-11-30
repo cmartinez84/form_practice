@@ -1,0 +1,5 @@
+name = Clock Angle
+description = Calculate the degrees between two values for minute and hour hands on an analog clock
+package = My Custom Modules
+core = 7.x
+files[] = clock_angle.module

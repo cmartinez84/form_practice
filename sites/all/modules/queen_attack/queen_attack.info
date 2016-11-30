@@ -1,0 +1,5 @@
+name = Queen Attack
+description = Check if queen can attack piece.
+package = My Custom Modules
+core = 7.x
+files[] = queen_attack.module

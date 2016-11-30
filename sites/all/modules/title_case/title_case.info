@@ -1,0 +1,5 @@
+name = Title Case
+description = Will convert a string into
+package = My Custom Modules
+core = 7.x
+files[] = title_case.module

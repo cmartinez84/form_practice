@@ -1,0 +1,63 @@
+<?php
+function queen_attack_menu() {
+    $items['queen_attack'] = array(
+        'title' => 'Queen Attack',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('queen_attack_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['queen_attack_results_page'] = array(
+        'title' => 'Queen Attack Results',
+        'page callback' => 'queen_attack_check',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function queen_attack_form() {
+    $form['queen_square'] = array(
+        '#title' => 'Queen Square',
+        '#type' => 'textfield',
+        '#description' => t('Enter the square where the queen is at'),
+    );
+    $form['move_square'] = array(
+        '#title' => 'Move Square',
+        '#type' => 'textfield',
+        '#description' => t('Enter the square where you want to move the queen'),
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Check Move',
+    );
+    return $form;
+}
+
+function queen_attack_form_submit($form, &$form_state) {
+    $_SESSION['queen'] = $form_state['values']['queen_square'];
+    $_SESSION['move'] = $form_state['values']['move_square'];
+    $form_state['redirect'] = 'queen_attack_results_page';
+}
+
+
+function queen_attack_check() {
+    $queen = $_SESSION['queen'];
+    $square = $_SESSION['move'];
+    $queen_letter = strtoupper(substr($queen, 0, 1));
+    $square_letter = strtoupper(substr($square, 0, 1));
+    $queen_number = intval(substr($queen, 1, 1));
+    $square_number = intval(substr($square, 1, 1));
+    $letters = array("A", "B", "C", "D", "E", "F", "G", "H");
+    $letter_math = abs((array_search($queen_letter, $letters)) - (array_search($square_letter, $letters)));
+    $number_math = abs($queen_number - $square_number);
+    if ($queen_letter === $square_letter) {
+        return "Queen can attack that square! Letter";
+    } elseif ($queen_number === $square_number) {
+        return "Queen can attack that square! Number";
+    } elseif ($letter_math === $number_math){
+        return "Queen can attack that square! Diagonal";
+    } else {
+        return "Illegal Move!";
+    }
+}
